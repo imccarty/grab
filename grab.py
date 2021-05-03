@@ -89,7 +89,8 @@ def query(programme_type, channel, since, search_term, output_format="full"):
 def download_by_pid(programme_type, quality, force, pid):
     quality_arg = get_quality_arg(programme_type, quality)
     force_arg = get_force_arg(force)
-    cmdline = f"{default_cmdline} {quality_arg} {force_arg} --whitespace --fileprefix=\"<nameshort> <firstbcastdate> - <episodeshort>\" --pid={pid}"
+    output_arg = get_output_arg(get_home_path(download_folder))
+    cmdline = f"{default_cmdline} {quality_arg} {force_arg} --whitespace --fileprefix=\"<nameshort> <firstbcastdate> - <episodeshort>\" --pid={pid} {output_arg}"
     execute(cmdline)
 
 def download_by_preset(programme_type, since, quality, force):
@@ -133,6 +134,9 @@ def get_force_arg(force):
     if force:
         arg = "--force"
     return arg
+
+def get_output_arg(path):
+    return f"--output=\"{path}\""
 
 def get_quality_arg(programme_type, quality):
     if not quality:

@@ -10,9 +10,7 @@ RUN echo 'deb http://download.opensuse.org/repositories/home:/m-grant-prg/Debian
     && apt update && apt install -y get-iplayer && apt clean
 
 WORKDIR /app
-RUN mkdir -p $HOME/transfer && mkdir -p $HOME/downloads && get_iplayer --prefs-add --output="$HOME/downloads"
+RUN mkdir -p $HOME/downloads && mkdir -p $HOME/transfer
 COPY grab.py grab.py
-
-#VOLUME ["$HOME/.get_iplayer", "$HOME/transfer"]
 
 ENTRYPOINT [ "python3", "grab.py" ]
