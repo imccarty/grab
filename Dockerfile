@@ -9,8 +9,14 @@ RUN echo 'deb http://download.opensuse.org/repositories/home:/m-grant-prg/Debian
     && curl -fsSL https://download.opensuse.org/repositories/home:m-grant-prg/Debian_10/Release.key | gpg --dearmor | tee /etc/apt/trusted.gpg.d/home:m-grant-prg.gpg > /dev/null \
     && apt update && apt install -y get-iplayer && apt clean
 
+# Keeps Python from generating .pyc files in the container
+ENV PYTHONDONTWRITEBYTECODE=1
+
+# Turns off buffering for easier container logging
+ENV PYTHONUNBUFFERED=1
+
 WORKDIR /app
-RUN mkdir -p $HOME/downloads && mkdir -p $HOME/transfer
-COPY grab.py grab.py
+COPY grab.py /app
+RUN mkdir -p $HOME/downloads && mkdir -p $HOME/transfer && mkdir -p $HOME/sounds
 
 ENTRYPOINT [ "python3", "grab.py" ]
