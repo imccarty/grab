@@ -1,0 +1,18 @@
+version: '3.4'
+
+services:
+  grab:
+    image: imccarty/grab
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    volumes:
+      - type: bind
+        source: $HOME/mnt_grab/.get_iplayer
+        target: /root/.get_iplayer
+      - type: bind
+        source: $HOME/mnt_grab/transfer
+        target: /root/transfer
+      - type: bind
+        source: $HOME/mnt_grab/sounds
+        target: /root/sounds
