@@ -11,17 +11,21 @@ test_mode = False
 
 lock_file = ".grab_running"
 download_folder = "downloads"
-transfer_folder = "transfer"
+generic_transfer_folder = "transfer"
+radio_present_transfer_folder = "sounds"
+tv_preset_transfer_folder = "transfer"
 
 default_cmdline = "/usr/bin/get_iplayer --no-copyright"
 
-radio_preset = ["Danny Howard",
-                "Pete Tong", 
-                "Radio 1's Essential Mix",
-                "Diplo and Friends",
-                "Radio 1's Residency",
-                "Radio 1's Drum & Bass Show with Ren.* LaVice",
-                "Radio 1's Drum & Bass Mix"]
+radio_preset = [
+    "Danny Howard",
+    "Pete Tong", 
+    "Radio 1's Essential Mix",
+    "Diplo and Friends",
+    "Radio 1's Residency",
+    "Radio 1's Drum & Bass Show with Ren.* LaVice",
+    "Radio 1's Drum & Bass Mix",
+    ]
 
 tv_preset = ["Panorama",
              "Horizon",
@@ -58,8 +62,8 @@ def do_download(programme_type, since, quality, force, pid, preset):
     if pid:
         download_by_pid(programme_type, quality, force, pid)
     elif preset:
-        download_by_preset(programme_type, since, quality, force)
-    prep_to_transfer()
+        download_by_preset(programme_type, since, quality, force) 
+    post_download(get_transfer_folder(programme_type, preset))
 
 def do_list(programme_type, channel, since):
     search_term = ".*"
@@ -89,7 +93,8 @@ def query(programme_type, channel, since, search_term, output_format="full"):
 def download_by_pid(programme_type, quality, force, pid):
     quality_arg = get_quality_arg(programme_type, quality)
     force_arg = get_force_arg(force)
-    cmdline = f"{default_cmdline} {quality_arg} {force_arg} --whitespace --fileprefix=\"<nameshort> <firstbcastdate> - <episodeshort>\" --pid={pid}"
+    output_arg = get_output_arg()
+    cmdline = f"{default_cmdline} {quality_arg} {force_arg} --whitespace --fileprefix=\"<nameshort> <firstbcastdate> - <episodeshort>\" --pid={pid} {output_arg}"
     execute(cmdline)
 
 def download_by_preset(programme_type, since, quality, force):
@@ -119,12 +124,21 @@ def print_list(output):
     for item in output:
         print(item)
 
-def prep_to_transfer():
+def post_download(transfer_folder):
     download_folder_path = get_home_path(download_folder)
     files = os.listdir(download_folder_path)
     for file in files:
-        shutil.move(f"{download_folder_path}/{file}", get_home_path(transfer_folder))
+        shutil.move(f"{download_folder_path}/{file}", transfer_folder)
 
+def get_transfer_folder(programme_type, preset):
+    transfer_folder = get_home_path(generic_transfer_folder)
+    if preset:
+        if programme_type == "radio":
+            transfer_folder = get_home_path(radio_present_transfer_folder)
+        elif programme_type == "tv":
+            transfer_folder = get_home_path(tv_preset_transfer_folder)
+    return transfer_folder
+    
 def get_type_arg(programme_type):
     return f"--type={programme_type}"
 
@@ -133,6 +147,10 @@ def get_force_arg(force):
     if force:
         arg = "--force"
     return arg
+
+def get_output_arg():
+    path = get_home_path(download_folder)
+    return f"--output=\"{path}\""
 
 def get_quality_arg(programme_type, quality):
     if not quality:
