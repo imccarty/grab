@@ -18,13 +18,13 @@ tv_preset_transfer_folder = "transfer"
 default_cmdline = "/usr/bin/get_iplayer --no-copyright"
 
 radio_preset = [
-    "Danny Howard",
     "Pete Tong", 
     "Radio 1's Essential Mix",
-    "Diplo and Friends",
     "Radio 1's Residency",
     "Radio 1's Drum & Bass Show with Ren.* LaVice",
     "Radio 1's Drum & Bass Mix",
+    "Radio 1's Future Dance with Sarah Story",
+    "BBC Introducing on Radio 1 Dance",
     ]
 
 tv_preset = ["Panorama",
