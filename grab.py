@@ -29,7 +29,7 @@ radio_preset = [
 
 tv_preset = ["Panorama",
              "Horizon",
-             "Call the Midwife: Series 10"]
+            ]
 
 default_quality = {"radio": "best", "tv": "good"}
 
